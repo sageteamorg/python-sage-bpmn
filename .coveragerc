@@ -1,0 +1,9 @@
+[run]
+branch = True
+source = sage_bpmn
+
+[report]
+omit =
+    tests/*
+    .tox/*
+    docs/*
