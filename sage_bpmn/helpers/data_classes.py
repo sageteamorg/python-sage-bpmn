@@ -1,3 +1,5 @@
+from typing import List
+
 from dataclasses import dataclass
 
 from sage_bpmn.helpers.enums import EventType, GatewayType, TaskType
@@ -54,3 +56,18 @@ class BPMNEvent:
     event_id: str
     name: str
     event_type: EventType
+
+@dataclass(frozen=True)
+class BPMNProcess:
+    """Represents a BPMN Process, including subprocesses."""
+
+    process_id: str
+    name: str
+    is_executable: bool
+    parent_process_id: str = None  # None if it's a top-level process
+    elements: List[str] = None  # List of element IDs (tasks, gateways, etc.)
+
+    def __post_init__(self):
+        """Ensure elements is always a list."""
+        if self.elements is None:
+            object.__setattr__(self, "elements", [])

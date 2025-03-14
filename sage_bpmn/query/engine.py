@@ -6,6 +6,7 @@ from sage_bpmn.helpers.data_classes import (
     BPMNGateway,
     BPMNSequenceFlow,
     BPMNTask,
+    BPMNProcess
 )
 from sage_bpmn.helpers.enums import EventType, GatewayType, TaskType
 
@@ -105,3 +106,14 @@ class BPMNQueryEngine:
     def get_all_events(self) -> List[BPMNEvent]:
         """Returns all BPMN events."""
         return list(self.repository.get_events().values())
+
+    def get_process_by_id(self, process_id: str) -> Optional[BPMNProcess]:
+        """Finds a BPMN process by its ID."""
+        return self.repository.get_processes().get(process_id, None)
+
+    def get_subprocesses(self, parent_process_id: str) -> List[BPMNProcess]:
+        """Returns all subprocesses of a given process."""
+        return [
+            p for p in self.repository.get_processes().values()
+            if p.parent_process_id == parent_process_id
+        ]

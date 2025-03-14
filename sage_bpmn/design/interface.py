@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict
 
-from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask
+from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask, BPMNProcess
 
 
 class IBPMNRepository(ABC):
@@ -21,4 +21,12 @@ class IBPMNRepository(ABC):
 
     @abstractmethod
     def get_tasks(self) -> Dict[str, BPMNTask]:
+        pass
+
+    @abstractmethod
+    def add_process(self, process: BPMNProcess):
+        pass
+
+    @abstractmethod
+    def get_processes(self) -> Dict[str, BPMNProcess]:
         pass

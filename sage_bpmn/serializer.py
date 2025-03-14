@@ -9,6 +9,7 @@ from sage_bpmn.helpers.data_classes import (
     BPMNGateway,
     BPMNSequenceFlow,
     BPMNTask,
+    BPMNProcess
 )
 from sage_bpmn.helpers.enums import EventType, GatewayType, TaskType
 from sage_bpmn.helpers.exceptions import BPMNFileTypeError
@@ -92,9 +93,50 @@ class BPMNParser:
                 )
                 self.repository.add_event(event)
 
+    def extract_processes(self):
+        """Extracts processes and subprocesses from BPMN XML."""
+        processes = self.root.findall(".//bpmn:process", namespaces=BPMN_NAMESPACE)
+        
+        print(f"Found {len(processes)} processes")  # DEBUGGING
+
+        for process in processes:
+            process_id = process.get("id", "Unknown")
+            name = process.get("name", f"Process_{process_id}")
+            is_executable = process.get("isExecutable", "false") == "true"
+
+            print(f"Extracting process: ID={process_id}, Name={name}, Executable={is_executable}")  # DEBUGGING
+
+            bpmn_process = BPMNProcess(
+                process_id=process_id,
+                name=name,
+                is_executable=is_executable,
+                elements=[]
+            )
+            self.repository.add_process(bpmn_process)
+
+            # Extract subprocesses inside this process
+            self.extract_subprocesses(process, process_id)
+
+    def extract_subprocesses(self, parent, parent_process_id):
+        """Recursively extracts subprocesses inside a process."""
+        subprocesses = parent.findall(".//bpmn:subProcess", namespaces=BPMN_NAMESPACE)
+        for subprocess in subprocesses:
+            subprocess_id = subprocess.get("id", "Unknown")
+            name = subprocess.get("name", f"Subprocess_{subprocess_id}")
+
+            bpmn_process = BPMNProcess(
+                process_id=subprocess_id,
+                name=name,
+                is_executable=True,  # Subprocesses are typically executable
+                parent_process_id=parent_process_id,
+                elements=[]
+            )
+            self.repository.add_process(bpmn_process)
+
     def extract_all(self):
         """Extracts all BPMN elements: gateways, tasks, and sequence flows."""
         self.extract_gateways()
         self.extract_tasks()
         self.extract_sequence_flows()
         self.extract_events()
+        self.extract_processes()
