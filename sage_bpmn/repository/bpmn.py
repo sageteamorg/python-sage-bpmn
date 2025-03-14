@@ -1,6 +1,8 @@
 from typing import Dict
-from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask
+
 from sage_bpmn.design.interface import IBPMNRepository
+from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask
+
 
 class InMemoryBPMNRepository(IBPMNRepository):
     """Stores BPMN gateways and tasks in memory."""

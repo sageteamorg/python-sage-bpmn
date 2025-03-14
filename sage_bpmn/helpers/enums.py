@@ -1,7 +1,9 @@
 from enum import StrEnum
 
+
 class GatewayType(StrEnum):
     """Enum for BPMN Gateway types."""
+
     EXCLUSIVE = "exclusiveGateway"
     PARALLEL = "parallelGateway"
     INCLUSIVE = "inclusiveGateway"
@@ -10,6 +12,7 @@ class GatewayType(StrEnum):
 
 class TaskType(StrEnum):
     """Enum for BPMN Task types."""
+
     GENERIC = "task"
     USER = "userTask"
     MANUAL = "manualTask"

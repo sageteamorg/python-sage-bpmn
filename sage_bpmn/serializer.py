@@ -1,13 +1,15 @@
 from pathlib import Path
-from typing import List, Union, Dict
+from typing import Dict, List, Union
+
 from lxml.etree import XMLParser, _Element, _ElementTree, parse
 
 from sage_bpmn.design.interface import IBPMNRepository
-from sage_bpmn.helpers.exceptions import BPMNFileTypeError
-from sage_bpmn.helpers.enums import GatewayType, TaskType
 from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask
+from sage_bpmn.helpers.enums import GatewayType, TaskType
+from sage_bpmn.helpers.exceptions import BPMNFileTypeError
 
-BPMN_NAMESPACE = {'bpmn': 'http://www.omg.org/spec/BPMN/20100524/MODEL'}
+BPMN_NAMESPACE = {"bpmn": "http://www.omg.org/spec/BPMN/20100524/MODEL"}
+
 
 class BPMNParser:
     """BPMN XML Parser to extract BPMN elements."""
@@ -27,23 +29,31 @@ class BPMNParser:
 
     def extract_gateways(self):
         for gateway_type in GatewayType:
-            elements = self.root.findall(f".//bpmn:{gateway_type.value}", namespaces=BPMN_NAMESPACE)
+            elements = self.root.findall(
+                f".//bpmn:{gateway_type.value}", namespaces=BPMN_NAMESPACE
+            )
             for element in elements:
                 gateway = BPMNGateway(
                     gateway_id=element.get("id", "Unknown"),
-                    name=element.get("name", f"{gateway_type.name}_{element.get('id', 'Unknown')}"),
-                    gateway_type=gateway_type
+                    name=element.get(
+                        "name", f"{gateway_type.name}_{element.get('id', 'Unknown')}"
+                    ),
+                    gateway_type=gateway_type,
                 )
                 self.repository.add_gateway(gateway)
 
     def extract_tasks(self):
         """Extracts all BPMN tasks and stores them in the repository."""
         for task_type in TaskType:
-            elements = self.root.findall(f".//bpmn:{task_type.value}", namespaces=BPMN_NAMESPACE)
+            elements = self.root.findall(
+                f".//bpmn:{task_type.value}", namespaces=BPMN_NAMESPACE
+            )
             for element in elements:
                 task = BPMNTask(
                     task_id=element.get("id", "Unknown"),
-                    name=element.get("name", f"{task_type.name}_{element.get('id', 'Unknown')}"),
-                    task_type=task_type
+                    name=element.get(
+                        "name", f"{task_type.name}_{element.get('id', 'Unknown')}"
+                    ),
+                    task_type=task_type,
                 )
                 self.repository.add_task(task)

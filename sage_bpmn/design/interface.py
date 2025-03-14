@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Dict
+
 from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask
 
 
