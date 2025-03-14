@@ -7,9 +7,9 @@ from sage_bpmn.design.interface import IBPMNRepository
 from sage_bpmn.helpers.data_classes import (
     BPMNEvent,
     BPMNGateway,
+    BPMNProcess,
     BPMNSequenceFlow,
     BPMNTask,
-    BPMNProcess
 )
 from sage_bpmn.helpers.enums import EventType, GatewayType, TaskType
 from sage_bpmn.helpers.exceptions import BPMNFileTypeError
@@ -96,7 +96,7 @@ class BPMNParser:
     def extract_processes(self):
         """Extracts processes and subprocesses from BPMN XML."""
         processes = self.root.findall(".//bpmn:process", namespaces=BPMN_NAMESPACE)
-        
+
         print(f"Found {len(processes)} processes")  # DEBUGGING
 
         for process in processes:
@@ -104,13 +104,15 @@ class BPMNParser:
             name = process.get("name", f"Process_{process_id}")
             is_executable = process.get("isExecutable", "false") == "true"
 
-            print(f"Extracting process: ID={process_id}, Name={name}, Executable={is_executable}")  # DEBUGGING
+            print(
+                f"Extracting process: ID={process_id}, Name={name}, Executable={is_executable}"
+            )  # DEBUGGING
 
             bpmn_process = BPMNProcess(
                 process_id=process_id,
                 name=name,
                 is_executable=is_executable,
-                elements=[]
+                elements=[],
             )
             self.repository.add_process(bpmn_process)
 
@@ -129,7 +131,7 @@ class BPMNParser:
                 name=name,
                 is_executable=True,  # Subprocesses are typically executable
                 parent_process_id=parent_process_id,
-                elements=[]
+                elements=[],
             )
             self.repository.add_process(bpmn_process)
 

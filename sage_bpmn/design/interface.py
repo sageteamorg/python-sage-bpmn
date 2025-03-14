@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict
 
-from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask, BPMNProcess
+from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNProcess, BPMNTask
 
 
 class IBPMNRepository(ABC):

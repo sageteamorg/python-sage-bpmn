@@ -1,12 +1,12 @@
-from typing import Dict, List
+from typing import Dict
 
 from sage_bpmn.design.interface import IBPMNRepository
 from sage_bpmn.helpers.data_classes import (
     BPMNEvent,
     BPMNGateway,
+    BPMNProcess,
     BPMNSequenceFlow,
     BPMNTask,
-    BPMNProcess
 )
 
 

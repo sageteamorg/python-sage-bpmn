@@ -1,6 +1,5 @@
-from typing import List
-
 from dataclasses import dataclass
+from typing import List
 
 from sage_bpmn.helpers.enums import EventType, GatewayType, TaskType
 
@@ -56,6 +55,7 @@ class BPMNEvent:
     event_id: str
     name: str
     event_type: EventType
+
 
 @dataclass(frozen=True)
 class BPMNProcess:

@@ -4,9 +4,9 @@ from sage_bpmn.design.interface import IBPMNRepository
 from sage_bpmn.helpers.data_classes import (
     BPMNEvent,
     BPMNGateway,
+    BPMNProcess,
     BPMNSequenceFlow,
     BPMNTask,
-    BPMNProcess
 )
 from sage_bpmn.helpers.enums import EventType, GatewayType, TaskType
 
@@ -114,6 +114,7 @@ class BPMNQueryEngine:
     def get_subprocesses(self, parent_process_id: str) -> List[BPMNProcess]:
         """Returns all subprocesses of a given process."""
         return [
-            p for p in self.repository.get_processes().values()
+            p
+            for p in self.repository.get_processes().values()
             if p.parent_process_id == parent_process_id
         ]
