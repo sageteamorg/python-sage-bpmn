@@ -1,8 +1,13 @@
 from typing import List, Optional
 
 from sage_bpmn.design.interface import IBPMNRepository
-from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNSequenceFlow, BPMNTask
-from sage_bpmn.helpers.enums import GatewayType, TaskType
+from sage_bpmn.helpers.data_classes import (
+    BPMNEvent,
+    BPMNGateway,
+    BPMNSequenceFlow,
+    BPMNTask,
+)
+from sage_bpmn.helpers.enums import EventType, GatewayType, TaskType
 
 
 class BPMNQueryEngine:
@@ -84,3 +89,19 @@ class BPMNQueryEngine:
     def get_all_sequence_flows(self) -> List[BPMNSequenceFlow]:
         """Returns all BPMN sequence flows."""
         return list(self.repository.get_sequence_flows().values())
+
+    def get_event_by_id(self, event_id: str) -> Optional[BPMNEvent]:
+        """Finds an event by its ID."""
+        return self.repository.get_events().get(event_id, None)
+
+    def get_events_by_type(self, event_type: EventType) -> List[BPMNEvent]:
+        """Filters and returns BPMN events of a specific type."""
+        return [
+            event
+            for event in self.repository.get_events().values()
+            if event.event_type == event_type
+        ]
+
+    def get_all_events(self) -> List[BPMNEvent]:
+        """Returns all BPMN events."""
+        return list(self.repository.get_events().values())

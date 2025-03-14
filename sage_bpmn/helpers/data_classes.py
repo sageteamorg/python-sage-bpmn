@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from sage_bpmn.helpers.enums import GatewayType, TaskType
+from sage_bpmn.helpers.enums import EventType, GatewayType, TaskType
 
 
 @dataclass(frozen=True)
@@ -45,3 +45,12 @@ class BPMNSequenceFlow:
     flow_id: str
     source_ref: str
     target_ref: str
+
+
+@dataclass(frozen=True)
+class BPMNEvent:
+    """Represents a BPMN Event (Start, End, Intermediate)."""
+
+    event_id: str
+    name: str
+    event_type: EventType

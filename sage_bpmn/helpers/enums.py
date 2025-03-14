@@ -21,3 +21,11 @@ class TaskType(StrEnum):
     BUSINESS_RULE = "businessRuleTask"
     SEND = "sendTask"
     RECEIVE = "receiveTask"
+
+
+class EventType(StrEnum):
+    """Enum for BPMN Event types."""
+
+    START = "startEvent"
+    END = "endEvent"
+    INTERMEDIATE = "intermediateCatchEvent"

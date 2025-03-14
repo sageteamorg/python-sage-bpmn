@@ -1,11 +1,16 @@
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Union
 
-from lxml.etree import XMLParser, _Element, _ElementTree, parse
+from lxml.etree import XMLParser, _ElementTree, parse
 
 from sage_bpmn.design.interface import IBPMNRepository
-from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNSequenceFlow, BPMNTask
-from sage_bpmn.helpers.enums import GatewayType, TaskType
+from sage_bpmn.helpers.data_classes import (
+    BPMNEvent,
+    BPMNGateway,
+    BPMNSequenceFlow,
+    BPMNTask,
+)
+from sage_bpmn.helpers.enums import EventType, GatewayType, TaskType
 from sage_bpmn.helpers.exceptions import BPMNFileTypeError
 
 BPMN_NAMESPACE = {"bpmn": "http://www.omg.org/spec/BPMN/20100524/MODEL"}
@@ -70,8 +75,26 @@ class BPMNParser:
             )
             self.repository.add_sequence_flow(sequence_flow)
 
+    def extract_events(self):
+        """Extracts BPMN events (Start, End, Intermediate) and stores them in the repository."""
+        for event_type in EventType:
+            elements = self.root.findall(
+                f".//bpmn:{event_type.value}", namespaces=BPMN_NAMESPACE
+            )
+
+            for element in elements:
+                event = BPMNEvent(
+                    event_id=element.get("id", "Unknown"),
+                    name=element.get(
+                        "name", f"{event_type.name}_{element.get('id', 'Unknown')}"
+                    ),
+                    event_type=event_type,
+                )
+                self.repository.add_event(event)
+
     def extract_all(self):
         """Extracts all BPMN elements: gateways, tasks, and sequence flows."""
         self.extract_gateways()
         self.extract_tasks()
         self.extract_sequence_flows()
+        self.extract_events()
