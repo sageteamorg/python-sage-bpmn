@@ -1,7 +1,9 @@
-import pytest
 from enum import StrEnum
-from sage_bpmn.helpers.enums import GatewayType, TaskType
+
+import pytest
+
 from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask
+from sage_bpmn.helpers.enums import GatewayType, TaskType
 
 
 # Tests for sage_bpmn.helpers.enums
@@ -44,7 +46,9 @@ def test_gateway_type_enum_length():
 
 def test_task_type_enum_length():
     """Test the number of TaskType enum members."""
-    assert len(TaskType) == 8  # GENERIC, USER, MANUAL, SERVICE, SCRIPT, BUSINESS_RULE, SEND, RECEIVE
+    assert (
+        len(TaskType) == 8
+    )  # GENERIC, USER, MANUAL, SERVICE, SCRIPT, BUSINESS_RULE, SEND, RECEIVE
 
 
 # Tests for sage_bpmn.helpers.data_classes

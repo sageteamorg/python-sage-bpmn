@@ -4,7 +4,7 @@ from typing import Dict, List, Union
 from lxml.etree import XMLParser, _Element, _ElementTree, parse
 
 from sage_bpmn.design.interface import IBPMNRepository
-from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask
+from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNSequenceFlow, BPMNTask
 from sage_bpmn.helpers.enums import GatewayType, TaskType
 from sage_bpmn.helpers.exceptions import BPMNFileTypeError
 
@@ -57,3 +57,21 @@ class BPMNParser:
                     task_type=task_type,
                 )
                 self.repository.add_task(task)
+
+    def extract_sequence_flows(self):
+        """Extracts sequence flows and stores them in the repository."""
+        elements = self.root.findall(".//bpmn:sequenceFlow", namespaces=BPMN_NAMESPACE)
+
+        for element in elements:
+            sequence_flow = BPMNSequenceFlow(
+                flow_id=element.get("id", "Unknown"),
+                source_ref=element.get("sourceRef", "Unknown"),
+                target_ref=element.get("targetRef", "Unknown"),
+            )
+            self.repository.add_sequence_flow(sequence_flow)
+
+    def extract_all(self):
+        """Extracts all BPMN elements: gateways, tasks, and sequence flows."""
+        self.extract_gateways()
+        self.extract_tasks()
+        self.extract_sequence_flows()

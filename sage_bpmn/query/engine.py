@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from sage_bpmn.design.interface import IBPMNRepository
-from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNTask
+from sage_bpmn.helpers.data_classes import BPMNGateway, BPMNSequenceFlow, BPMNTask
 from sage_bpmn.helpers.enums import GatewayType, TaskType
 
 
@@ -63,3 +63,24 @@ class BPMNQueryEngine:
             for task in self.repository.get_tasks().values()
             if name_query.lower() in task.name.lower()
         ]
+
+    def get_sequence_flow_by_id(self, flow_id: str) -> Optional[BPMNSequenceFlow]:
+        return self.repository.get_sequence_flows().get(flow_id, None)
+
+    def get_sequence_flows_by_source(self, source_id: str) -> List[BPMNSequenceFlow]:
+        return [
+            flow
+            for flow in self.repository.get_sequence_flows().values()
+            if flow.source_ref == source_id
+        ]
+
+    def get_sequence_flows_by_target(self, target_id: str) -> List[BPMNSequenceFlow]:
+        return [
+            flow
+            for flow in self.repository.get_sequence_flows().values()
+            if flow.target_ref == target_id
+        ]
+
+    def get_all_sequence_flows(self) -> List[BPMNSequenceFlow]:
+        """Returns all BPMN sequence flows."""
+        return list(self.repository.get_sequence_flows().values())

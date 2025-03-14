@@ -14,7 +14,9 @@ class BPMNGateway:
     def __post_init__(self):
         """Validate that gateway_type is a GatewayType enum value."""
         if not isinstance(self.gateway_type, GatewayType):
-            raise TypeError(f"gateway_type must be a GatewayType, got {type(self.gateway_type).__name__}")
+            raise TypeError(
+                f"gateway_type must be a GatewayType, got {type(self.gateway_type).__name__}"
+            )
 
 
 @dataclass(frozen=True)
@@ -28,7 +30,18 @@ class BPMNTask:
     def __post_init__(self):
         """Validate that task_type is a TaskType enum value."""
         if not isinstance(self.task_type, TaskType):
-            raise TypeError(f"task_type must be a TaskType, got {type(self.task_type).__name__}")
+            raise TypeError(
+                f"task_type must be a TaskType, got {type(self.task_type).__name__}"
+            )
 
     def __repr__(self):
         return f"<{self.task_type.name} Task id={self.task_id} name={self.name}>"
+
+
+@dataclass(frozen=True)
+class BPMNSequenceFlow:
+    """Represents a BPMN Sequence Flow between elements."""
+
+    flow_id: str
+    source_ref: str
+    target_ref: str
