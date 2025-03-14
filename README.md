@@ -48,16 +48,16 @@ pip install python-sage-bpmn
 ### Step 1: Setting Up the BPMN Repository
 To manage BPMN elements, you need to create a repository instance:
 ```python
-from bpmn import InMemoryBPMNRepository
+from sage_bpmn import InMemoryBPMNRepository
 
 repo = InMemoryBPMNRepository()
 ```
-This repository will store all BPMN elements extracted from BPMN files.
+This repository will store all BPMN elements extracted from sage_bpmn files.
 
 ### Step 2: Parsing a BPMN File
 To extract BPMN elements from an XML file:
 ```python
-from bpmn import BPMNParser
+from sage_bpmn import BPMNParser
 
 parser = BPMNParser("example.bpmn", repository=repo)
 parser.extract_all()
@@ -67,7 +67,7 @@ After parsing, the repository will contain tasks, gateways, processes, and seque
 ### Step 3: Querying BPMN Elements
 You can now query stored BPMN elements using the query engine:
 ```python
-from bpmn import BPMNQueryEngine, TaskType, GatewayType
+from sage_bpmn import BPMNQueryEngine, TaskType, GatewayType
 
 query_engine = BPMNQueryEngine(repository=repo)
 
@@ -105,7 +105,7 @@ for subprocess in subprocesses:
 ## Error Handling
 Custom exceptions allow handling BPMN-related issues gracefully:
 ```python
-from bpmn import BPMNValidationError
+from sage_bpmn import BPMNValidationError
 
 try:
     raise BPMNValidationError("Missing start event")
