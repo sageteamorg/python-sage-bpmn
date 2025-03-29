@@ -12,7 +12,9 @@ from sage_bpmn_v2.helpers.data_classes import (
     ExecutionListener,
     ExtensionProperty,
     Process,
+    SubProcess,
     ScriptTask,
+    ServiceTask,
     SequenceFlow,
     StartEvent,
     UserTask,
@@ -20,6 +22,7 @@ from sage_bpmn_v2.helpers.data_classes import (
     ZeebeFormDefinition,
     ZeebeAssignment,
     ZeebeInput,
+    ZeebeTaskDefinition,
     ZeebeOutput
 )
 from sage_bpmn_v2.helpers.enums import BPMNTag
@@ -31,6 +34,7 @@ TAG_TO_CLASS = {
     BPMNTag.END_EVENT: EndEvent,
     BPMNTag.USER_TASK: UserTask,
     BPMNTag.EXCLUSIVE_GATEWAY: ExclusiveGateway,
+    BPMNTag.SUB_PROCESS: SubProcess
 }
 
 
@@ -123,6 +127,24 @@ class BPMNParser:
             script = self._parse_script(elem)
             element_obj = ScriptTask(id=elem_id, name=name, documentation=documentation, script=script)
 
+        elif tag_enum == BPMNTag.SERVICE_TASK:
+            element_obj = ServiceTask(id=elem_id, name=name, documentation=documentation)
+            self._parse_service_task_extensions(elem, element_obj)
+
+        elif tag_enum == BPMNTag.SUB_PROCESS:
+            subprocess = SubProcess(id=elem_id, name=name, documentation=documentation)
+
+            for sub_elem in elem:
+                sub_tag = etree.QName(sub_elem).localname
+                if sub_tag in {"documentation", "extensionElements"}:
+                    continue
+
+                parsed_sub = self._parse_flow_element(sub_elem)
+                if parsed_sub:
+                    subprocess.flowElements.append(parsed_sub)
+
+            element_obj = subprocess
+
         elif tag_enum == BPMNTag.SEQUENCE_FLOW:
             source = elem.get("sourceRef")
             target = elem.get("targetRef")
@@ -141,6 +163,43 @@ class BPMNParser:
     def _parse_script(self, elem: Element) -> Optional[str]:
         script_el = elem.find("bpmn:script", namespaces=BPMN_NS)
         return script_el.text if script_el is not None else None
+
+    def _parse_service_task_extensions(self, elem: Element, service_task: ServiceTask):
+        ext_el = elem.find("bpmn:extensionElements", namespaces=BPMN_NS)
+        if ext_el is None:
+            return
+
+        # -- taskDefinition --
+        task_def_el = ext_el.find("zeebe:taskDefinition", namespaces=BPMN_NS)
+        if task_def_el is not None:
+            job_type = task_def_el.get("type")
+            retries = task_def_el.get("retries")
+            if job_type:
+                service_task.taskDefinition = ZeebeTaskDefinition(
+                    type=job_type,
+                    retries=retries,
+                )
+
+        # -- inputs --
+        for input_el in ext_el.findall(".//zeebe:input", namespaces=BPMN_NS):
+            src = input_el.get("source") or ""
+            tgt = input_el.get("target")
+            if tgt:
+                service_task.inputs.append(ZeebeInput(source=src, target=tgt))
+
+        # -- outputs --
+        for output_el in ext_el.findall(".//zeebe:output", namespaces=BPMN_NS):
+            src = output_el.get("source") or ""
+            tgt = output_el.get("target")
+            if tgt:
+                service_task.outputs.append(ZeebeOutput(source=src, target=tgt))
+
+        # -- headers --
+        for header_el in ext_el.findall(".//zeebe:header", namespaces=BPMN_NS):
+            key = header_el.get("key")
+            value = header_el.get("value")
+            if key and value:
+                service_task.headers.append(ZeebeHeader(key=key, value=value))
 
     def _parse_user_task_extensions(self, elem: Element, user_task: UserTask):
         ext_el = elem.find("bpmn:extensionElements", namespaces=BPMN_NS)

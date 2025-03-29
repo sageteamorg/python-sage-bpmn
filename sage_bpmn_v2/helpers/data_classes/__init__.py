@@ -16,6 +16,7 @@ from .core import (
     StartEvent,
     Task,
     UserTask,
+    SubProcess,
 )
 from .data import DataObject, DataStoreReference
 from .definitions import Definitions
@@ -29,13 +30,15 @@ from .properties_panel import (
     ZeebeFormDefinition,
     ZeebeHeader,
     ZeebeInput,
-    ZeebeOutput
+    ZeebeOutput,
+    ZeebeTaskDefinition
 )
 
 __all__ = [
     "Definitions",
     "AtomicFlowElement",
     "Process",
+    "SubProcess",
     "SequenceFlow",
     "ExecutionListener",
     "ExtensionProperty",
@@ -69,4 +72,5 @@ __all__ = [
     "ZeebeHeader",
     "ZeebeInput",
     "ZeebeOutput",
+    "ZeebeTaskDefinition"
 ]

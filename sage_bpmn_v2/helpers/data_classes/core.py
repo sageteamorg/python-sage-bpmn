@@ -48,7 +48,8 @@ from .properties_panel import (
     ZeebeInput,
     ZeebeAssignment,
     ZeebeFormDefinition,
-    ZeebeHeader
+    ZeebeHeader,
+    ZeebeTaskDefinition,
 )
 
 
@@ -280,8 +281,10 @@ class ServiceTask(Task):
     ------------
     <serviceTask id="ServiceTask_1" name="Call API" />
     """
-
-    pass
+    taskDefinition: Optional[ZeebeTaskDefinition] = None
+    inputs: List[ZeebeInput] = field(default_factory=list)
+    outputs: List[ZeebeOutput] = field(default_factory=list)
+    headers: List[ZeebeHeader] = field(default_factory=list)
 
 
 @dataclass
@@ -302,3 +305,16 @@ class ScriptTask(Task):
     """
 
     script: Optional[str] = None
+
+@dataclass
+class SubProcess(Task):
+    """
+    Represents a BPMN SubProcess, which contains its own nested flow elements.
+
+    XML Example:
+    ------------
+    <subProcess id="SubProcess_1" name="Nested Flow">
+        <!-- nested flowElements go here -->
+    </subProcess>
+    """
+    flowElements: List[AtomicFlowElement] = field(default_factory=list)

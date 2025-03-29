@@ -48,3 +48,18 @@ class ZeebeOutput:
 class ZeebeHeader:
     key: str
     value: str
+
+@dataclass
+class ZeebeTaskDefinition:
+    """
+    Represents the task definition of a Zeebe ServiceTask.
+
+    Attributes:
+    -----------
+    type : str
+        The job type to be handled by the worker (required).
+    retries : Optional[str]
+        Number of retry attempts if the task fails.
+    """
+    type: str
+    retries: Optional[str] = None
