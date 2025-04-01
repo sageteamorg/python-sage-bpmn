@@ -1,4 +1,9 @@
 from .artifacts import Association, TextAnnotation
+from .flow import (
+    FlowEdge,
+    FlowNode,
+    Token
+)
 from .core import (
     BoundaryEvent,
     EndEvent,
@@ -72,5 +77,8 @@ __all__ = [
     "ZeebeHeader",
     "ZeebeInput",
     "ZeebeOutput",
-    "ZeebeTaskDefinition"
+    "ZeebeTaskDefinition",
+    "FlowEdge",
+    "FlowNode",
+    "Token",
 ]

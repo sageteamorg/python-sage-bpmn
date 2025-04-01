@@ -11,6 +11,7 @@ from sage_bpmn_v2.helpers.data_classes import (
     ExclusiveGateway,
     ExecutionListener,
     ExtensionProperty,
+    ParallelGateway,
     Process,
     SubProcess,
     ScriptTask,
@@ -34,6 +35,7 @@ TAG_TO_CLASS = {
     BPMNTag.END_EVENT: EndEvent,
     BPMNTag.USER_TASK: UserTask,
     BPMNTag.EXCLUSIVE_GATEWAY: ExclusiveGateway,
+    BPMNTag.PARALLEL_GATEWAY:ParallelGateway,
     BPMNTag.SUB_PROCESS: SubProcess
 }
 

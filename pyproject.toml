@@ -27,6 +27,9 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
 lxml = "^5.3.1"
+networkx = "^3.4.2"
+matplotlib = "^3.10.1"
+pydot = "^3.0.4"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"

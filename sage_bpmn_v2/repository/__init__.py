@@ -1,2 +1,8 @@
 from .query import BPMNQuery
-from .execution import ExecutionPathResolver
+from .dag import DAGVisualizer, BPMNDAGBuilder
+
+__all__ = [
+    "BPMNQuery",
+    "BPMNDAGBuilder",
+    "DAGVisualizer",
+]
