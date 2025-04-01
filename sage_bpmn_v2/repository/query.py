@@ -1,5 +1,6 @@
 from typing import List, Optional, Type, Union
-from sage_bpmn_v2.helpers.data_classes import Process, AtomicFlowElement, SubProcess
+
+from sage_bpmn_v2.helpers.data_classes import AtomicFlowElement, Process, SubProcess
 
 
 class BPMNQuery:
@@ -9,17 +10,19 @@ class BPMNQuery:
     def find_by_id(self, element_id: str) -> Optional[AtomicFlowElement]:
         return self._search_by_id(self.process.flowElements, element_id)
 
-    def find_by_type(self, element_type: Type[AtomicFlowElement]) -> List[AtomicFlowElement]:
+    def find_by_type(
+        self, element_type: Type[AtomicFlowElement]
+    ) -> List[AtomicFlowElement]:
         return self._search_by_type(self.process.flowElements, element_type)
 
     def filter_by_attributes(
-        self,
-        element_type: Optional[Type[AtomicFlowElement]] = None,
-        **attrs
+        self, element_type: Optional[Type[AtomicFlowElement]] = None, **attrs
     ) -> List[AtomicFlowElement]:
         return self._filter_by_attrs(self.process.flowElements, element_type, attrs)
 
-    def _search_by_id(self, elements: List[AtomicFlowElement], element_id: str) -> Optional[AtomicFlowElement]:
+    def _search_by_id(
+        self, elements: List[AtomicFlowElement], element_id: str
+    ) -> Optional[AtomicFlowElement]:
         for el in elements:
             if el.id == element_id:
                 return el
@@ -29,7 +32,9 @@ class BPMNQuery:
                     return found
         return None
 
-    def _search_by_type(self, elements: List[AtomicFlowElement], element_type: Type[AtomicFlowElement]) -> List[AtomicFlowElement]:
+    def _search_by_type(
+        self, elements: List[AtomicFlowElement], element_type: Type[AtomicFlowElement]
+    ) -> List[AtomicFlowElement]:
         results = []
         for el in elements:
             if isinstance(el, element_type):
@@ -42,7 +47,7 @@ class BPMNQuery:
         self,
         elements: List[AtomicFlowElement],
         element_type: Optional[Type[AtomicFlowElement]],
-        attrs: dict
+        attrs: dict,
     ) -> List[AtomicFlowElement]:
         results = []
         for el in elements:
@@ -54,6 +59,8 @@ class BPMNQuery:
                 results.append(el)
 
             if isinstance(el, SubProcess):
-                results.extend(self._filter_by_attrs(el.flowElements, element_type, attrs))
+                results.extend(
+                    self._filter_by_attrs(el.flowElements, element_type, attrs)
+                )
 
         return results

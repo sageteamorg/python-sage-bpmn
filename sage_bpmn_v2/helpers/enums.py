@@ -11,4 +11,3 @@ class BPMNTag(StrEnum):
     PARALLEL_GATEWAY = "parallelGateway"
     SEQUENCE_FLOW = "sequenceFlow"
     SUB_PROCESS = "subProcess"
-

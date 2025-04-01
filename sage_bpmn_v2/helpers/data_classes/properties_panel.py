@@ -49,6 +49,7 @@ class ZeebeHeader:
     key: str
     value: str
 
+
 @dataclass
 class ZeebeTaskDefinition:
     """
@@ -61,5 +62,6 @@ class ZeebeTaskDefinition:
     retries : Optional[str]
         Number of retry attempts if the task fails.
     """
+
     type: str
     retries: Optional[str] = None

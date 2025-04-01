@@ -1,9 +1,4 @@
 from .artifacts import Association, TextAnnotation
-from .flow import (
-    FlowEdge,
-    FlowNode,
-    Token
-)
 from .core import (
     BoundaryEvent,
     EndEvent,
@@ -19,13 +14,14 @@ from .core import (
     SequenceFlow,
     ServiceTask,
     StartEvent,
+    SubProcess,
     Task,
     UserTask,
-    SubProcess,
 )
 from .data import DataObject, DataStoreReference
 from .definitions import Definitions
 from .diagrams import BPMNDiagram, BPMNEdge, BPMNPlane, BPMNShape
+from .flow import FlowEdge, FlowNode, Token
 from .lanes import Lane, LaneSet
 from .process import AtomicFlowElement, Process
 from .properties_panel import (
@@ -36,7 +32,7 @@ from .properties_panel import (
     ZeebeHeader,
     ZeebeInput,
     ZeebeOutput,
-    ZeebeTaskDefinition
+    ZeebeTaskDefinition,
 )
 
 __all__ = [

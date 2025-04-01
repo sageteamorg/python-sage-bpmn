@@ -44,11 +44,11 @@ from typing import List, Optional
 from .properties_panel import (
     ExecutionListener,
     ExtensionProperty,
-    ZeebeOutput,
-    ZeebeInput,
     ZeebeAssignment,
     ZeebeFormDefinition,
     ZeebeHeader,
+    ZeebeInput,
+    ZeebeOutput,
     ZeebeTaskDefinition,
 )
 
@@ -252,6 +252,7 @@ class Task(AtomicFlowElement):
     name : Optional[str]
         Display name for the task.
     """
+
     pass
 
 
@@ -281,6 +282,7 @@ class ServiceTask(Task):
     ------------
     <serviceTask id="ServiceTask_1" name="Call API" />
     """
+
     taskDefinition: Optional[ZeebeTaskDefinition] = None
     inputs: List[ZeebeInput] = field(default_factory=list)
     outputs: List[ZeebeOutput] = field(default_factory=list)
@@ -306,6 +308,7 @@ class ScriptTask(Task):
 
     script: Optional[str] = None
 
+
 @dataclass
 class SubProcess(Task):
     """
@@ -317,4 +320,5 @@ class SubProcess(Task):
         <!-- nested flowElements go here -->
     </subProcess>
     """
+
     flowElements: List[AtomicFlowElement] = field(default_factory=list)

@@ -16,7 +16,7 @@ classifiers=[
 ]
 
 packages = [
-    { include = "sage_bpmn" }
+    { include = "sage_bpmn_v2" }
 ]
 
 [tool.poetry.urls]

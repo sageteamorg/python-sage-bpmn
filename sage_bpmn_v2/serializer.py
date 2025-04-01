@@ -13,18 +13,18 @@ from sage_bpmn_v2.helpers.data_classes import (
     ExtensionProperty,
     ParallelGateway,
     Process,
-    SubProcess,
     ScriptTask,
-    ServiceTask,
     SequenceFlow,
+    ServiceTask,
     StartEvent,
+    SubProcess,
     UserTask,
-    ZeebeHeader,
-    ZeebeFormDefinition,
     ZeebeAssignment,
+    ZeebeFormDefinition,
+    ZeebeHeader,
     ZeebeInput,
+    ZeebeOutput,
     ZeebeTaskDefinition,
-    ZeebeOutput
 )
 from sage_bpmn_v2.helpers.enums import BPMNTag
 
@@ -35,8 +35,8 @@ TAG_TO_CLASS = {
     BPMNTag.END_EVENT: EndEvent,
     BPMNTag.USER_TASK: UserTask,
     BPMNTag.EXCLUSIVE_GATEWAY: ExclusiveGateway,
-    BPMNTag.PARALLEL_GATEWAY:ParallelGateway,
-    BPMNTag.SUB_PROCESS: SubProcess
+    BPMNTag.PARALLEL_GATEWAY: ParallelGateway,
+    BPMNTag.SUB_PROCESS: SubProcess,
 }
 
 
@@ -87,9 +87,16 @@ class BPMNParser:
             exec_listeners=process_exec_listeners,
         )
         version_tag = next(
-            (prop.value for prop in process_ext_props if prop.name == "zeebe:versionTag"), None
+            (
+                prop.value
+                for prop in process_ext_props
+                if prop.name == "zeebe:versionTag"
+            ),
+            None,
         )
-        process_ext_props = [p for p in process_ext_props if p.name != "zeebe:versionTag"]
+        process_ext_props = [
+            p for p in process_ext_props if p.name != "zeebe:versionTag"
+        ]
 
         return Process(
             id=process_id,
@@ -107,7 +114,9 @@ class BPMNParser:
         name = elem.get("name")
 
         if not elem_id:
-            logger.warning(f"Skipping element <{tag}>: missing required 'id' attribute.")
+            logger.warning(
+                f"Skipping element <{tag}>: missing required 'id' attribute."
+            )
             return None
 
         try:
@@ -117,7 +126,9 @@ class BPMNParser:
             return None
 
         documentation_el = elem.find("bpmn:documentation", namespaces=BPMN_NS)
-        documentation = documentation_el.text.strip() if documentation_el is not None else None
+        documentation = (
+            documentation_el.text.strip() if documentation_el is not None else None
+        )
 
         element_obj = None
 
@@ -127,10 +138,14 @@ class BPMNParser:
 
         elif tag_enum == BPMNTag.SCRIPT_TASK:
             script = self._parse_script(elem)
-            element_obj = ScriptTask(id=elem_id, name=name, documentation=documentation, script=script)
+            element_obj = ScriptTask(
+                id=elem_id, name=name, documentation=documentation, script=script
+            )
 
         elif tag_enum == BPMNTag.SERVICE_TASK:
-            element_obj = ServiceTask(id=elem_id, name=name, documentation=documentation)
+            element_obj = ServiceTask(
+                id=elem_id, name=name, documentation=documentation
+            )
             self._parse_service_task_extensions(elem, element_obj)
 
         elif tag_enum == BPMNTag.SUB_PROCESS:
@@ -151,11 +166,17 @@ class BPMNParser:
             source = elem.get("sourceRef")
             target = elem.get("targetRef")
             element_obj = SequenceFlow(
-                id=elem_id, sourceRef=source, targetRef=target, name=name, documentation=documentation
+                id=elem_id,
+                sourceRef=source,
+                targetRef=target,
+                name=name,
+                documentation=documentation,
             )
 
         elif tag_enum in TAG_TO_CLASS:
-            element_obj = TAG_TO_CLASS[tag_enum](id=elem_id, name=name, documentation=documentation)
+            element_obj = TAG_TO_CLASS[tag_enum](
+                id=elem_id, name=name, documentation=documentation
+            )
 
         if element_obj:
             self._parse_extension_elements(elem, target=element_obj)

@@ -1,10 +1,12 @@
-import networkx as nx
 import matplotlib.pyplot as plt
+import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
 
-from sage_bpmn_v2.helpers.data_classes import AtomicFlowElement
 from sage_bpmn_v2.helpers.data_classes import (
-    Process, AtomicFlowElement, SequenceFlow, SubProcess
+    AtomicFlowElement,
+    Process,
+    SequenceFlow,
+    SubProcess,
 )
 
 
@@ -12,7 +14,9 @@ class BPMNDAGBuilder:
     def __init__(self, process: Process):
         self.process = process
         self.graph = nx.DiGraph()
-        self._id_to_element = {el.id: el for el in self._flatten_elements(process.flowElements)}
+        self._id_to_element = {
+            el.id: el for el in self._flatten_elements(process.flowElements)
+        }
 
     def _flatten_elements(self, elements):
         flat = []
@@ -37,7 +41,9 @@ class DAGVisualizer:
     def __init__(self, graph: nx.DiGraph):
         self.graph = graph
         self._filtered_nodes = [
-            n for n in graph.nodes if not isinstance(graph.nodes[n]["element"], SequenceFlow)
+            n
+            for n in graph.nodes
+            if not isinstance(graph.nodes[n]["element"], SequenceFlow)
         ]
 
     def draw(self, with_labels=True, figsize=(12, 8)):
@@ -62,9 +68,11 @@ class DAGVisualizer:
         return f"{element.__class__.__name__}\n{element.name or element.id}"
 
     def print_tree_view(self, start_node=None, prefix=""):
-        roots = [
-            n for n in self._filtered_nodes if self.graph.in_degree(n) == 0
-        ] if start_node is None else [start_node]
+        roots = (
+            [n for n in self._filtered_nodes if self.graph.in_degree(n) == 0]
+            if start_node is None
+            else [start_node]
+        )
 
         for r in roots:
             self._print_tree_recursive(r, prefix)
@@ -75,7 +83,8 @@ class DAGVisualizer:
         print(prefix + "├── " + label)
 
         successors = [
-            succ for succ in self.graph.successors(node_id)
+            succ
+            for succ in self.graph.successors(node_id)
             if succ in self._filtered_nodes
         ]
 
