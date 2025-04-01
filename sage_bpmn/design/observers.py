@@ -4,7 +4,7 @@ from typing import Dict, List
 from networkx import DiGraph
 
 from sage_bpmn.design.interfaces import ExecutionObserver
-from sage_bpmn.helpers.data_classes import Token
+from sage_bpmn.models import Token
 
 
 class ConsoleObserver(ExecutionObserver):

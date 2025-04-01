@@ -5,7 +5,7 @@ from lxml import etree
 from lxml.etree import Element, ElementTree
 
 from sage_bpmn.helpers.consts import BPMN_NS
-from sage_bpmn.helpers.data_classes import (
+from sage_bpmn.models import (
     AtomicFlowElement,
     EndEvent,
     ExclusiveGateway,

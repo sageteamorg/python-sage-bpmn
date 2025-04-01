@@ -1,7 +1,7 @@
 from typing import Dict, List, Set
 
 from sage_bpmn.design.interfaces import ExecutionObserver
-from sage_bpmn.helpers.data_classes import (
+from sage_bpmn.models import (
     AtomicFlowElement,
     EndEvent,
     ExclusiveGateway,
