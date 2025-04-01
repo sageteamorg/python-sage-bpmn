@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
 
-from sage_bpmn_v2.helpers.data_classes import (
+from sage_bpmn.helpers.data_classes import (
     AtomicFlowElement,
     Process,
     SequenceFlow,

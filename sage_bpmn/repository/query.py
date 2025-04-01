@@ -1,6 +1,6 @@
-from typing import List, Optional, Type, Union
+from typing import List, Optional, Type
 
-from sage_bpmn_v2.helpers.data_classes import AtomicFlowElement, Process, SubProcess
+from sage_bpmn.helpers.data_classes import AtomicFlowElement, Process, SubProcess
 
 
 class BPMNQuery:

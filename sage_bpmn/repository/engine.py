@@ -1,7 +1,7 @@
 from typing import Dict, List, Set
 
-from sage_bpmn_v2.design.interfaces import ExecutionObserver
-from sage_bpmn_v2.helpers.data_classes import (
+from sage_bpmn.design.interfaces import ExecutionObserver
+from sage_bpmn.helpers.data_classes import (
     AtomicFlowElement,
     EndEvent,
     ExclusiveGateway,
@@ -9,7 +9,7 @@ from sage_bpmn_v2.helpers.data_classes import (
     Process,
     StartEvent,
 )
-from sage_bpmn_v2.repository import BPMNDAGBuilder
+from sage_bpmn.repository import BPMNDAGBuilder
 
 
 class BPMNExecutor:

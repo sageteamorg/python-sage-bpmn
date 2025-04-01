@@ -16,7 +16,7 @@ classifiers=[
 ]
 
 packages = [
-    { include = "sage_bpmn_v2" }
+    { include = "sage_bpmn" }
 ]
 
 [tool.poetry.urls]
@@ -63,7 +63,7 @@ norecursedirs = [
 ]
 
 [tool.bandit]
-targets = ["./sage_sms"]
+targets = ["./sage_bpmn"]
 exclude_dirs = [
     "tests",
     "migrations",

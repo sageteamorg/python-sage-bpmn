@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1gbzaj1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.33.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+  <bpmn:process id="Process_1j4qhg9" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start Leave Request">
+      <bpmn:documentation>Triggered when employee initiates leave</bpmn:documentation>
+      <bpmn:outgoing>Flow_0hv70jq</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0hv70jq" sourceRef="StartEvent_1" targetRef="UserTask_SubmitRequest" />
+    <bpmn:userTask id="UserTask_SubmitRequest" name="Submit Leave Request">
+      <bpmn:documentation>Employee provides details of their leave.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:assignmentDefinition assignee="=initiator" />
+        <zeebe:formDefinition formId="form_leave_request" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=variables.leaveType" target="type" />
+          <zeebe:input source="=variables.leaveDays" target="days" />
+          <zeebe:input source="=variables.reason" target="reason" />
+          <zeebe:output source="=true" target="requestSubmitted" />
+          <zeebe:output source="={&#10;  type: type,&#10;  days: days,&#10;  reason: reason&#10;}" target="leaveRequest" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="Content-Type" value="application/json" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0hv70jq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1j6af70</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1j6af70" sourceRef="UserTask_SubmitRequest" targetRef="UserTask_ManagerApproval" />
+    <bpmn:userTask id="UserTask_ManagerApproval" name="Manager Approval">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:assignmentDefinition assignee="manager_group" />
+        <zeebe:formDefinition formId="form_manager_approval" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=variables.leaveRequest" target="leaveRequest" />
+          <zeebe:output source="={&#10;    approved: variables.approved,&#10;    comments: variables.comments&#10;  }" target="managerDecision" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1j6af70</bpmn:incoming>
+      <bpmn:outgoing>Flow_1wpbbtk</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1wpbbtk" sourceRef="UserTask_ManagerApproval" targetRef="UserTask_HRConfirm" />
+    <bpmn:userTask id="UserTask_HRConfirm" name="HR Confirmation">
+      <bpmn:documentation>HR reviews the manager's decision.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="form_hr_confirmation" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=variables.managerDecision" target="decision" />
+          <zeebe:output source="=if decision.approved then &#34;Approved&#34; else &#34;Rejected&#34;" target="finalStatus" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1wpbbtk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0m1pkyo</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_1" name="Leave Process Completed">
+      <bpmn:documentation>The leave process is complete.</bpmn:documentation>
+      <bpmn:incoming>Flow_0m1pkyo</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0m1pkyo" sourceRef="UserTask_HRConfirm" targetRef="EndEvent_1" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1j4qhg9">
+      <bpmndi:BPMNShape id="Activity_16y15h1_di" bpmnElement="UserTask_SubmitRequest">
+        <dc:Bounds x="310" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06tnepf_di" bpmnElement="UserTask_ManagerApproval">
+        <dc:Bounds x="530" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_11uo4nj_di" bpmnElement="UserTask_HRConfirm">
+        <dc:Bounds x="740" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1bz2o61_di" bpmnElement="EndEvent_1">
+        <dc:Bounds x="992" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="974" y="145" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="162" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="152" y="145" width="57" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0hv70jq_di" bpmnElement="Flow_0hv70jq">
+        <di:waypoint x="198" y="120" />
+        <di:waypoint x="310" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1j6af70_di" bpmnElement="Flow_1j6af70">
+        <di:waypoint x="410" y="120" />
+        <di:waypoint x="530" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wpbbtk_di" bpmnElement="Flow_1wpbbtk">
+        <di:waypoint x="630" y="120" />
+        <di:waypoint x="740" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0m1pkyo_di" bpmnElement="Flow_0m1pkyo">
+        <di:waypoint x="840" y="120" />
+        <di:waypoint x="992" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
