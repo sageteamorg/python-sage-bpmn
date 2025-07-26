@@ -30,12 +30,15 @@ from sage_bpmn.helpers.enums import BPMNTag
 
 logger = logging.getLogger(__name__)
 
+GATEWAY_TO_CLASS = {
+    BPMNTag.EXCLUSIVE_GATEWAY: ExclusiveGateway,
+    BPMNTag.PARALLEL_GATEWAY: ParallelGateway,
+}
+
 TAG_TO_CLASS = {
     BPMNTag.START_EVENT: StartEvent,
     BPMNTag.END_EVENT: EndEvent,
     BPMNTag.USER_TASK: UserTask,
-    BPMNTag.EXCLUSIVE_GATEWAY: ExclusiveGateway,
-    BPMNTag.PARALLEL_GATEWAY: ParallelGateway,
     BPMNTag.SUB_PROCESS: SubProcess,
 }
 
@@ -171,6 +174,19 @@ class BPMNParser:
                 targetRef=target,
                 name=name,
                 documentation=documentation,
+            )
+
+        elif tag_enum in GATEWAY_TO_CLASS:
+            default = elem.get("default")
+            outgoingFlows = []
+            for sub_elem in elem:
+                sub_tag = etree.QName(sub_elem).localname
+                if sub_tag == "outgoing":
+                    outgoingFlows.append(sub_elem.text)
+
+            element_obj = GATEWAY_TO_CLASS[tag_enum](
+                id=elem_id, name=name, documentation=documentation,
+                outgoingFlows = outgoingFlows, defaultOutgoingFlow = default,
             )
 
         elif tag_enum in TAG_TO_CLASS:

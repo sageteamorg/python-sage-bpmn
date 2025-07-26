@@ -183,6 +183,8 @@ class Gateway(AtomicFlowElement):
 
     id: str
     name: Optional[str] = None
+    outgoingFlows: List[str] = field(default_factory=list)
+    defaultOutgoingFlow: Optional[str] = None
 
 
 @dataclass
