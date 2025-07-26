@@ -5,6 +5,7 @@ from lxml import etree
 from lxml.etree import Element, ElementTree
 
 from sage_bpmn.helpers.consts import BPMN_NS
+from sage_bpmn.helpers.enums import BPMNTag
 from sage_bpmn.models import (
     AtomicFlowElement,
     EndEvent,
@@ -165,12 +166,20 @@ class BPMNParser:
         elif tag_enum == BPMNTag.SEQUENCE_FLOW:
             source = elem.get("sourceRef")
             target = elem.get("targetRef")
+
+            conditionExpressions: List[str] = []
+            for sub_elem in elem:
+                sub_tag = etree.QName(sub_elem).localname
+                if sub_tag == "conditionExpression":
+                    conditionExpressions.append(sub_elem.text)
+
             element_obj = SequenceFlow(
                 id=elem_id,
                 sourceRef=source,
                 targetRef=target,
                 name=name,
                 documentation=documentation,
+                conditionExpressions=conditionExpressions,
             )
 
         elif tag_enum in TAG_TO_CLASS:

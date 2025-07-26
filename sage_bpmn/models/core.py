@@ -85,6 +85,7 @@ class SequenceFlow(AtomicFlowElement):
 
     sourceRef: str = ""
     targetRef: str = ""
+    conditionExpressions: List[str] = field(default_factory=list)
 
 
 # --- Base Event Class and Subclasses ---
