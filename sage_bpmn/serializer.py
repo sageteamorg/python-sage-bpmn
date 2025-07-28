@@ -9,6 +9,7 @@ from sage_bpmn.models import (
     AtomicFlowElement,
     EndEvent,
     ExclusiveGateway,
+    InclusiveGateway,
     ExecutionListener,
     ExtensionProperty,
     ParallelGateway,
@@ -35,6 +36,7 @@ TAG_TO_CLASS = {
     BPMNTag.END_EVENT: EndEvent,
     BPMNTag.USER_TASK: UserTask,
     BPMNTag.EXCLUSIVE_GATEWAY: ExclusiveGateway,
+    BPMNTag.INCLUSIVE_GATEWAY: InclusiveGateway,
     BPMNTag.PARALLEL_GATEWAY: ParallelGateway,
     BPMNTag.SUB_PROCESS: SubProcess,
 }
