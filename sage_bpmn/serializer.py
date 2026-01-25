@@ -11,9 +11,12 @@ from sage_bpmn.models import (
     ExclusiveGateway,
     ExecutionListener,
     ExtensionProperty,
+    IntermediateThrowEvent,
     ParallelGateway,
     Process,
+    ReceiveTask,
     ScriptTask,
+    SendTask,
     SequenceFlow,
     ServiceTask,
     StartEvent,
@@ -33,6 +36,7 @@ logger = logging.getLogger(__name__)
 TAG_TO_CLASS = {
     BPMNTag.START_EVENT: StartEvent,
     BPMNTag.END_EVENT: EndEvent,
+    BPMNTag.INTERMEDIATE_THROW_EVENT: IntermediateThrowEvent,
     BPMNTag.USER_TASK: UserTask,
     BPMNTag.EXCLUSIVE_GATEWAY: ExclusiveGateway,
     BPMNTag.PARALLEL_GATEWAY: ParallelGateway,
@@ -140,6 +144,16 @@ class BPMNParser:
             script = self._parse_script(elem)
             element_obj = ScriptTask(
                 id=elem_id, name=name, documentation=documentation, script=script
+            )
+
+        elif tag_enum == BPMNTag.SEND_TASK:
+            element_obj = SendTask(
+                id=elem_id, name=name, documentation=documentation
+            )
+
+        elif tag_enum == BPMNTag.RECEIVE_TASK:
+            element_obj = ReceiveTask(
+                id=elem_id, name=name, documentation=documentation
             )
 
         elif tag_enum == BPMNTag.SERVICE_TASK:

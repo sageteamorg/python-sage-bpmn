@@ -17,8 +17,10 @@ Definitions
 │   │   ├── BoundaryEvent
 │   │   ├── Task (base class)
 │   │   │   ├── UserTask
+│   │   │   ├── ReceiveTask
 │   │   │   ├── ServiceTask
 │   │   │   ├── ScriptTask
+│   │   │   ├── SendTask
 │   │   │   └── SubProcess (contains its own flowElements)
 │   │   ├── Gateway (base class)
 │   │   │   ├── ExclusiveGateway
@@ -274,6 +276,19 @@ class UserTask(Task):
 
 
 @dataclass
+class ReceiveTask(Task):
+    """
+    Represents a BPMN ReceiveTask, which wait until a proper message is received.
+
+    XML Example:
+    ------------
+    <sendTask id="ReceiveTask_1" name="Receive Message" />
+    """
+
+    pass
+
+
+@dataclass
 class ServiceTask(Task):
     """
     Represents a BPMN ServiceTask, performed by an automated service.
@@ -307,6 +322,19 @@ class ScriptTask(Task):
     """
 
     script: Optional[str] = None
+
+
+@dataclass
+class SendTask(Task):
+    """
+    Represents a BPMN SendTask, which models the publication of a message to an external system.
+
+    XML Example:
+    ------------
+    <sendTask id="SendTask_1" name="Send Message" />
+    """
+
+    pass
 
 
 @dataclass
